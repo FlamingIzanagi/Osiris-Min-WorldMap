@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "osiris_maps",
+  "version": "${version}",
+  "name": "OsirisMaps",
+  "description": "Cliente Osiris para Xaero Minimap y World Map: superficie, radar minimo y un mapa por backend de la network.",
+  "authors": ["Osiris"],
+  "license": "All Rights Reserved",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.osiris.minimap.OsirisMinimapClient"
+    ]
+  },
+  "mixins": [
+    "osiris-minimap.mixins.json",
+    "osiris-worldmap.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*",
+    "xaerominimap": ">=26.6.0",
+    "xaeroworldmap": ">=1.47.0"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

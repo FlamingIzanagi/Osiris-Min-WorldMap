@@ -1,0 +1,10 @@
+name: OsirisMaps
+version: '${version}'
+main: dev.osiris.maps.plugin.OsirisMapsPlugin
+api-version: '1.21'
+description: Control de minimapa y world map para el cliente OsirisMaps.
+authors: [Osiris]
+permissions:
+  osirismaps.admin:
+    description: Administra minimapa, world map, waypoints y rastreo.
+    default: op

@@ -1,0 +1,14 @@
+.gradle/
+build/
+run/
+out/
+.idea/
+*.iml
+*.jfr
+.classpath
+.project
+.settings/
+bin/
+logs/
+.fabric/
+remappedSrc/

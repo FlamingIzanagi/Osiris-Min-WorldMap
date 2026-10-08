@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.osiris.worldmap.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MixinMapProcessorWorldId",
+    "MixinWorldMapCaveAllowed",
+    "MixinCaveStartCalculator",
+    "MixinNetherCaveLayer",
+    "MixinTrackedPlayerCollector",
+    "MapContextAccessor",
+    "MixinTrackedPlayerRenderer",
+    "MixinTrackedPlayerMenu",
+    "MixinWorldMapControls",
+    "MixinWorldMapConfig",
+    "MixinGuiMapButtons",
+    "MixinWorldMapVisibility$Keys",
+    "MixinWorldMapVisibility$Open",
+    "RightClickOptionAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.osiris.minimap.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "KeyMappingAccessor",
+    "TooltipAccessor",
+    "WidgetTooltipAccessor",
+    "MixinComponentRebrand",
+    "MixinClientLanguageRebrand",
+    "MixinKeyMappingHide",
+    "MixinKeyMappingController",
+    "MixinKeyBindsList",
+    "KeyBindsListKeyAccessor",
+    "SelectionChildrenAccessor",
+    "MixinXaeroMinimapConfig",
+    "MixinMinimapCaveMode",
+    "MixinMinimapCaveAllowed",
+    "MixinManualCaveModeFunction",
+    "MixinMinimapWriterCave",
+    "MixinRadarStateUpdater",
+    "MixinRadarRenderer",
+    "MinimapContextAccessor",
+    "MixinTrackedPlayerRenderer",
+    "MixinAutoRootPath",
+    "MixinWorldStatePaths",
+    "MixinXaeroScreen",
+    "MixinClientPlayNetwork",
+    "MixinGuiAddWaypoint",
+    "MixinGuiWaypoints",
+    "MixinMinimapVisibility",
+    "MixinWaypointSlide",
+    "MixinWaypointLock",
+    "MixinWaypointCreate$Add",
+    "MixinWaypointCreate$Temporary",
+    "MixinDeathpoint"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

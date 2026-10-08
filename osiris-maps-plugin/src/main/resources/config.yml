@@ -1,0 +1,46 @@
+# OsirisMaps
+# /omap reload vuelve a leer este archivo.
+# Lo que un admin cambia con /omap se guarda en plugins/OsirisMaps/state.txt
+# y no se borra al recargar. Estos valores solo aplican cuando ese ajuste nunca se ha puesto por comando.
+
+defaults:
+  # Minimapa y world map visibles si nadie uso /omap display.
+  minimap: true
+  worldmap: true
+  # Crear waypoints y puntos de muerte permitidos si nadie uso /omap waypoints o /omap deathpoints.
+  waypoints: true
+  deathpoints: true
+  # Ver a los demas jugadores en el minimapa y el world map.
+  # false los oculta hasta que alguien use /omap players on.
+  players: false
+
+tracking:
+  # true: al morir el jugador rastreado se quita su waypoint.
+  # false: el waypoint sigue en el mapa aunque muera.
+  remove-on-death: true
+  # Cada cuantos ticks se lee la posicion. 4 = 0.2 segundos. Entre 1 y 40.
+  update-ticks: 4
+  # No se reenvia la posicion si el jugador se movio menos que esta distancia al cuadrado.
+  min-move-squared: 0.01
+
+players:
+  # Alcance de los iconos de otros jugadores. Solo cuenta si /omap players esta en on.
+  # default: cada cliente ve a quien Minecraft ya le cargo, segun su distancia de render.
+  #          El servidor no lee ni envia esas posiciones.
+  # full: se ven en todo el mapa. El servidor envia las posiciones, una vez por mundo y solo si cambiaron.
+  # /omap playersrange <default|full> [mundo] lo cambia. Si no pones mundo, es global.
+  # Un mundo concreto pisa el valor global y no se borra al cambiar el global.
+  range: default
+  # true = cabezas. false = puntos blancos, como el radar de entidades. El comando /omap playershead lo puede cambiar despues.
+  heads: false
+  # Cada cuantos ticks se actualizan los iconos en modo full. 10 = 0.5 segundos. Entre 1 y 40.
+  # En default este valor no se usa: el cliente dibuja a los jugadores que ya tiene cargados.
+  update-ticks: 10
+  # Color del icono. Indice 0-20 o nombre: white, yellow, red, green, blue, aqua, gold, gray...
+  color: white
+
+join:
+  # Al entrar, el plugin reintenta enviar reglas y visibilidad hasta que el cliente anuncia los canales.
+  # interval-ticks: espera entre intentos. attempts: cuantas veces lo intenta.
+  interval-ticks: 10
+  attempts: 40
