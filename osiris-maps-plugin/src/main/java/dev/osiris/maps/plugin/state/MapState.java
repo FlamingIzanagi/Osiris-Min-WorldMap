@@ -44,6 +44,8 @@ public final class MapState {
     private Boolean playerHeads;
     /** null = usar players.range de config.yml. true = full, false = distancia de render. */
     private Boolean rangeFull;
+    /** Sube cuando cambia una regla, la visibilidad o un waypoint. No sube al entrar un jugador. */
+    private long revision = 1L;
     private final Map<String, Boolean> rangeWorlds = new LinkedHashMap<>();
 
     public MapState(OsirisMapsPlugin plugin) {
@@ -73,6 +75,7 @@ public final class MapState {
         if (snapshot.rangeWorlds() != null) {
             this.rangeWorlds.putAll(snapshot.rangeWorlds());
         }
+        this.revision = snapshot.revision() < 1L ? 1L : snapshot.revision();
         if (!this.tracks.isEmpty()) {
             ensureTrackTask();
         }
@@ -92,14 +95,14 @@ public final class MapState {
     public void setDisplay(UUID player, Kind kind, boolean visible) {
         EnumMap<Kind, Boolean> forced = this.display.computeIfAbsent(player, ignored -> new EnumMap<>(Kind.class));
         forced.put(kind, visible);
-        markDirty();
+        bump();
     }
 
     public void setGlobalDisplay(Kind kind, boolean visible) {
         this.globalDisplay.put(kind, visible);
         this.display.values().forEach(flags -> flags.remove(kind));
         this.display.entrySet().removeIf(entry -> entry.getValue().isEmpty());
-        markDirty();
+        bump();
     }
 
     public void broadcastDisplay() {
@@ -118,7 +121,7 @@ public final class MapState {
                 this.bypass.remove(player);
             }
         }
-        markDirty();
+        bump();
     }
 
     /** Sin valor guardado por comando, se usa el default de config.yml. Un mundo concreto pisa la regla global. */
@@ -140,7 +143,7 @@ public final class MapState {
         } else {
             this.worldRules.computeIfAbsent(rule, ignored -> new LinkedHashMap<>()).put(worldId, enabled);
         }
-        markDirty();
+        bump();
     }
 
     public boolean waypointsGlobal() {
@@ -173,7 +176,7 @@ public final class MapState {
 
     public void setPlayerHeads(boolean heads) {
         this.playerHeads = heads;
-        markDirty();
+        bump();
     }
 
     public Boolean savedPlayerHeads() {
@@ -212,7 +215,7 @@ public final class MapState {
         } else {
             this.rangeWorlds.put(worldId, full);
         }
-        markDirty();
+        bump();
     }
 
     public Map<String, Boolean> rangeWorlds() {
@@ -221,13 +224,13 @@ public final class MapState {
 
     public void putWaypoint(Waypoint waypoint) {
         this.waypoints.put(waypoint.id(), waypoint);
-        markDirty();
+        bump();
     }
 
     public Waypoint removeWaypoint(String id) {
         Waypoint removed = this.waypoints.remove(id);
         if (removed != null) {
-            markDirty();
+            bump();
         }
         return removed;
     }
@@ -267,19 +270,37 @@ public final class MapState {
         return null;
     }
 
+    public long revision() {
+        return this.revision;
+    }
+
+    /** Avisa el número nuevo a quien tiene el addon, después de que los paquetes de datos ya salieron. */
+    public void publish() {
+        byte[] body = PacketBuf.revision((int) this.revision);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            plugin.messenger().send(player, Channels.REVISION, body);
+        }
+    }
+
     public void pushPlayer(Player player) {
+        plugin.messenger().send(player, Channels.SNAPSHOT, PacketBuf.snapshot());
         sendDisplay(player);
         sendRules(player);
         for (Waypoint waypoint : this.waypoints.values()) {
             plugin.messenger().send(player, Channels.ADD_WAYPOINT, waypoint.packet());
         }
+        pushTracks(player);
+        if (plugin.markers() != null) {
+            plugin.markers().send(player);
+        }
+        plugin.messenger().send(player, Channels.REVISION, PacketBuf.revision((int) this.revision));
+    }
+
+    public void pushTracks(Player player) {
         for (Track track : this.tracks.values()) {
             if (track.hasPosition()) {
                 plugin.messenger().send(player, Channels.UPDATE_TRACKING, track.packet());
             }
-        }
-        if (plugin.markers() != null) {
-            plugin.markers().send(player);
         }
     }
 
@@ -403,8 +424,14 @@ public final class MapState {
                 new EnumMap<>(this.globalDisplay),
                 this.playerHeads,
                 this.rangeFull,
-                new LinkedHashMap<>(this.rangeWorlds)
+                new LinkedHashMap<>(this.rangeWorlds),
+                this.revision
         );
+    }
+
+    private void bump() {
+        this.revision++;
+        markDirty();
     }
 
     private EnumMap<Rule, Map<String, Boolean>> copyWorldRules() {

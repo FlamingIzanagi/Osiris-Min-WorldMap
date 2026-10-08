@@ -8,8 +8,8 @@ This client does not replace Xaero. It runs on top of **Xaero's Minimap** and **
 
 | Piece | File | Installs in |
 | --- | --- | --- |
-| Fabric client mod | `osiris-maps-2.0.0.jar` | client `mods` folder |
-| Paper plugin | `osiris-maps-plugin-1.0.0.jar` | server `plugins` folder |
+| Fabric client mod | `osiris-maps-3.0.0.jar` | client `mods` folder |
+| Paper plugin | `osiris-maps-plugin-2.0.0.jar` | server `plugins` folder |
 
 Jars for each version are in [Releases](https://github.com/FlamingIzanagi/Osiris-Min-WorldMap/releases).
 

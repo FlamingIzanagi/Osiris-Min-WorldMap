@@ -2,6 +2,11 @@ package dev.osiris.maps.plugin;
 
 import dev.osiris.maps.plugin.state.MapState;
 import dev.osiris.maps.plugin.util.Colors;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /** Lee config.yml. El estado de los comandos vive aparte, en state.txt. */
 public final class PluginSettings {
@@ -10,10 +15,38 @@ public final class PluginSettings {
     public PluginSettings(OsirisMapsPlugin plugin) {
         this.plugin = plugin;
         plugin.saveDefaultConfig();
+        ensureAnnounceOption();
     }
 
     public void reload() {
         this.plugin.reloadConfig();
+    }
+
+    private void ensureAnnounceOption() {
+        Path file = this.plugin.getDataFolder().toPath().resolve("config.yml");
+        if (!Files.isRegularFile(file)) {
+            return;
+        }
+        try {
+            String raw = Files.readString(file);
+            if (raw.contains("announce-global:")) {
+                return;
+            }
+            Files.writeString(file, "\n# true: avisa a todo el servidor al encender o apagar una opcion global o de un mundo.\nannounce-global: false\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+            this.plugin.reloadConfig();
+        } catch (IOException error) {
+            this.plugin.getLogger().warning("No se pudo añadir announce-global a config.yml: " + error.getMessage());
+        }
+    }
+
+    /** Los avisos de encendido no pasan por aqui: esos se escriben siempre. */
+    public boolean logs() {
+        return this.plugin.getConfig().getBoolean("logs", true);
+    }
+
+    /** Aviso a todo el servidor al encender o apagar una opcion global o de un mundo. */
+    public boolean announceGlobal() {
+        return this.plugin.getConfig().getBoolean("announce-global", false);
     }
 
     public boolean defaultDisplay(MapState.Kind kind) {

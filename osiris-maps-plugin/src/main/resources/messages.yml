@@ -1,0 +1,84 @@
+# Mensajes de /omap.
+# /omap reload vuelve a leer este archivo.
+#
+# Colores, se pueden mezclar:
+#   &a &c &l &r          codigo clasico
+#   &#ffaa00             hex
+#   <#55ffff>            hex de MiniMessage
+#   <bold> <red>         MiniMessage
+#
+# {player} {world} {kind} {id} {name} {x} {y} {z} {label} {scope} {change}
+#
+# Anuncio a todos. Solo sale si announce-global esta en true en config.yml.
+# announce-global-* es para todo el servidor. announce-world-* nombra el mundo.
+
+prefix-enabled: true
+prefix: "&8[&bOsirisMaps&8]&r "
+
+announce-global-on: "&eSe ha activado {change} en el servidor."
+announce-global-off: "&eSe ha desactivado {change} en el servidor."
+announce-world-on: "&eSe ha activado {change} en el mundo {world}."
+announce-world-off: "&eSe ha desactivado {change} en el mundo {world}."
+announce-change-minimap: "el minimapa"
+announce-change-worldmap: "el world map"
+announce-change-waypoints: "la creacion de waypoints"
+announce-change-deathpoints: "los waypoints de muerte"
+announce-change-players: "la visibilidad de jugadores"
+announce-change-playershead: "el modo de cabezas"
+announce-change-range: "el alcance completo de jugadores"
+
+display-global-on: "&aActivado el {kind} en todo el servidor."
+display-global-off: "&cDesactivado el {kind} en todo el servidor."
+display-player-on: "&aActivado el {kind} de {player}."
+display-player-off: "&cDesactivado el {kind} de {player}."
+kind-minimap: "minimapa"
+kind-worldmap: "world map"
+
+bypass-on: "&aBypass activado para tu {kind}."
+bypass-off: "&cBypass desactivado para tu {kind}."
+
+label-waypoints: "Crear waypoints"
+label-deathpoints: "Los waypoints de muerte"
+label-players: "La visibilidad de jugadores"
+rule-global-on: "&a{label} activado en todo el servidor."
+rule-global-off: "&c{label} desactivado en todo el servidor."
+rule-world-on: "&a{label} activado en {world}."
+rule-world-off: "&c{label} desactivado en {world}."
+
+playershead-on: "&aLos jugadores se ven como cabezas."
+playershead-off: "&cLos jugadores se ven como puntos."
+playersrange-full: "&aLos jugadores se ven en todo el mapa {scope}."
+playersrange-default: "&aLos jugadores solo se ven dentro de la distancia de render {scope}."
+scope-global: "en todo el servidor"
+scope-world: "en {world}"
+
+reload: "&aConfiguracion de OsirisMaps recargada."
+waypoint-set: "&aWaypoint {id} guardado en {world}."
+waypoint-remove: "&aWaypoint {id} eliminado."
+waypoint-empty: "&aNo hay waypoints."
+waypoint-line: "&7{id} {world} {x} {y} {z} {name}"
+track-start: "&aRastreando a {player} como {name}."
+track-stop: "&aSe dejó de rastrear a {player}."
+
+error-world: "&cNo encuentro el mundo {world}."
+error-id: "&cEl id solo puede tener letras, números, _ y -, hasta 32 caracteres."
+error-color: "&cColor desconocido."
+error-name: "&cEl nombre tiene que tener entre 1 y 32 caracteres."
+error-waypoint: "&cNo existe el waypoint {id}."
+error-offline: "&cEse jugador no está conectado."
+error-track: "&cEse jugador no está siendo rastreado."
+
+help:
+  - "&7/omap waypoints <on|off> [mundo]"
+  - "&7/omap deathpoints <on|off> [mundo]"
+  - "&7/omap players <on|off> [mundo]"
+  - "&7/omap playershead <on|off>"
+  - "&7/omap playersrange <default|full> [mundo]"
+  - "&7/omap reload"
+  - "&7/omap display <minimap|worldmap> [jugador] <on|off>"
+  - "&7/omap bypass <minimap|worldmap> <on|off>"
+  - "&7/omap waypoint set <id> <mundo> <x> <y> <z> <color> <nombre>"
+  - "&7/omap waypoint remove <id>"
+  - "&7/omap waypoint list"
+  - "&7/omap track start <jugador> <color> <nombre>"
+  - "&7/omap track stop <jugador>"

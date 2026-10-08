@@ -36,6 +36,26 @@ public final class MapRules {
         return allowed(rangeFullGlobal, RANGE_WORLDS);
     }
 
+    public record View(
+            boolean waypointsGlobal,
+            Map<String, Boolean> waypointWorlds,
+            boolean deathGlobal,
+            Map<String, Boolean> deathWorlds,
+            boolean playersGlobal,
+            Map<String, Boolean> playerWorlds,
+            boolean rangeFull,
+            Map<String, Boolean> rangeWorlds
+    ) {
+    }
+
+    public static View view() {
+        return new View(
+                waypointsGlobal, Map.copyOf(WAYPOINT_WORLDS),
+                deathGlobal, Map.copyOf(DEATH_WORLDS),
+                playersGlobal, Map.copyOf(PLAYER_WORLDS),
+                rangeFullGlobal, Map.copyOf(RANGE_WORLDS));
+    }
+
     public static void replace(
             boolean waypoints,
             Map<String, Boolean> waypointWorlds,

@@ -1,6 +1,7 @@
 package dev.osiris.maps.plugin.net;
 
 import dev.osiris.maps.plugin.OsirisMapsPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -14,6 +15,14 @@ public final class PluginMessenger {
         for (String channel : Channels.ALL) {
             messenger.registerOutgoingPluginChannel(plugin, channel);
         }
+        messenger.registerIncomingPluginChannel(plugin, Channels.HELLO, (channel, player, message) -> {
+            int revision = PacketBuf.readVarInt(message);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (plugin.isEnabled()) {
+                    plugin.onHello(player, revision);
+                }
+            });
+        });
     }
 
     public void send(Player player, String channel, byte[] body) {

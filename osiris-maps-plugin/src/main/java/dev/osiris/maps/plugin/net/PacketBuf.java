@@ -20,6 +20,35 @@ public final class PacketBuf {
         return new byte[] {(byte) (visible ? 1 : 0)};
     }
 
+    public static byte[] revision(int value) {
+        ByteArrayOutputStream raw = new ByteArrayOutputStream(5);
+        writeVarInt(raw, value);
+        return raw.toByteArray();
+    }
+
+    public static byte[] snapshot() {
+        return new byte[] {1};
+    }
+
+    public static int readVarInt(byte[] body) {
+        if (body == null || body.length == 0) {
+            return 0;
+        }
+        int value = 0;
+        int shift = 0;
+        for (byte raw : body) {
+            value |= (raw & 0x7F) << shift;
+            if ((raw & 0x80) == 0) {
+                return value;
+            }
+            shift += 7;
+            if (shift > 28) {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
     public static byte[] point(String id, String world, double x, double y, double z, int color, String name) {
         ByteArrayOutputStream raw = new ByteArrayOutputStream(96);
         writeUtf(raw, id);

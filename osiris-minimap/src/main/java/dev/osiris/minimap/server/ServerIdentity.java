@@ -25,6 +25,7 @@ public final class ServerIdentity {
     private static final int REFRESH_TICKS = 200;
     private static final ArrayDeque<String> SEEN = new ArrayDeque<>();
     private static final List<Listener> LISTENERS = new ArrayList<>();
+    private static final List<Runnable> SWITCHED = new ArrayList<>();
 
     private static volatile String current;
     private static boolean active;
@@ -50,6 +51,14 @@ public final class ServerIdentity {
         Objects.requireNonNull(listener, "listener");
         synchronized (LOCK) {
             LISTENERS.add(listener);
+        }
+    }
+
+    /** Otro backend con la misma IP, por respawn. El login normal entra por el evento JOIN. */
+    public static void whenSwitched(Runnable runnable) {
+        Objects.requireNonNull(runnable, "runnable");
+        synchronized (LOCK) {
+            SWITCHED.add(runnable);
         }
     }
 
@@ -101,7 +110,11 @@ public final class ServerIdentity {
     }
 
     public static void onDisconnect() {
-        stopRefresh();
+        synchronized (LOCK) {
+            active = false;
+            current = null;
+            pendingTicks = 0;
+        }
     }
 
     /** Un mundo local no es un backend de la network: no hay carpeta extra ni refresco. */
@@ -201,7 +214,9 @@ public final class ServerIdentity {
     ) {
         String published;
         boolean changed;
+        boolean wasActive;
         synchronized (LOCK) {
+            wasActive = active;
             active = true;
             seed = nextSeed;
             chunkRadius = radius;
@@ -214,6 +229,15 @@ public final class ServerIdentity {
         }
         if (changed) {
             OsirisMinimapClient.LOGGER.info("Carpeta de mapa del backend: {}", published);
+        }
+        if (changed && wasActive) {
+            List<Runnable> switched;
+            synchronized (LOCK) {
+                switched = List.copyOf(SWITCHED);
+            }
+            for (Runnable runnable : switched) {
+                runnable.run();
+            }
         }
     }
 

@@ -47,6 +47,11 @@ public final class OsirisPayloads {
                         payload.rangeFull(), payload.rangeWorlds())));
         register(PlayersPayload.TYPE, PlayersPayload.CODEC, (payload, context) ->
                 context.client().execute(() -> RemoteWaypoints.syncRadar(payload.world(), payload.heads(), payload.full(), payload.players())));
+        register(SnapshotPayload.TYPE, SnapshotPayload.CODEC, (payload, context) ->
+                context.client().execute(RemoteWaypoints::dropStatic));
+        register(RevisionPayload.TYPE, RevisionPayload.CODEC, (payload, context) ->
+                context.client().execute(() -> RuleProfile.remember(payload.revision())));
+        PayloadTypeRegistry.playC2S().register(HelloPayload.TYPE, HelloPayload.CODEC);
     }
 
     private static <T extends CustomPacketPayload> void register(
@@ -150,6 +155,48 @@ public final class OsirisPayloads {
                         buf.readBoolean(), readRule(buf),
                         buf.readBoolean(), readRule(buf),
                         buf.readBoolean(), readRule(buf))
+        );
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record HelloPayload(int revision) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<HelloPayload> TYPE = new CustomPacketPayload.Type<>(channel("hello"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, HelloPayload> CODEC = StreamCodec.of(
+                (buf, payload) -> buf.writeVarInt(payload.revision()),
+                buf -> new HelloPayload(buf.readVarInt())
+        );
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record SnapshotPayload() implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<SnapshotPayload> TYPE = new CustomPacketPayload.Type<>(channel("snapshot"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SnapshotPayload> CODEC = StreamCodec.of(
+                (buf, payload) -> buf.writeByte(1),
+                buf -> {
+                    buf.readByte();
+                    return new SnapshotPayload();
+                }
+        );
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record RevisionPayload(int revision) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<RevisionPayload> TYPE = new CustomPacketPayload.Type<>(channel("revision"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, RevisionPayload> CODEC = StreamCodec.of(
+                (buf, payload) -> buf.writeVarInt(payload.revision()),
+                buf -> new RevisionPayload(buf.readVarInt())
         );
 
         @Override

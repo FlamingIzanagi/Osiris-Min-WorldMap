@@ -26,7 +26,8 @@ public final class StateFile {
             Map<MapState.Kind, Boolean> globalDisplay,
             Boolean playerHeads,
             Boolean rangeFull,
-            Map<String, Boolean> rangeWorlds
+            Map<String, Boolean> rangeWorlds,
+            long revision
     ) {
     }
 
@@ -42,8 +43,9 @@ public final class StateFile {
         Boolean playerHeads = null;
         Boolean rangeFull = null;
         Map<String, Boolean> rangeWorlds = new LinkedHashMap<>();
+        long revision = 1L;
         if (!Files.isRegularFile(file)) {
-            return new Snapshot(display, bypass, waypoints, tracks, globalRules, worldRules, globalDisplay, playerHeads, rangeFull, rangeWorlds);
+            return new Snapshot(display, bypass, waypoints, tracks, globalRules, worldRules, globalDisplay, playerHeads, rangeFull, rangeWorlds, revision);
         }
         try {
             for (String line : Files.readAllLines(file)) {
@@ -81,6 +83,13 @@ public final class StateFile {
                             }
                         }
                     }
+                    case 'V' -> {
+                        try {
+                            revision = Long.parseLong(body.trim());
+                        } catch (NumberFormatException ignored) {
+                            revision = 1L;
+                        }
+                    }
                     default -> {
                     }
                 }
@@ -88,13 +97,14 @@ public final class StateFile {
         } catch (IOException | RuntimeException error) {
             plugin.getLogger().warning("No se pudo leer el estado de OsirisMaps: " + error.getMessage());
         }
-        return new Snapshot(display, bypass, waypoints, tracks, globalRules, worldRules, globalDisplay, playerHeads, rangeFull, rangeWorlds);
+        return new Snapshot(display, bypass, waypoints, tracks, globalRules, worldRules, globalDisplay, playerHeads, rangeFull, rangeWorlds, revision);
     }
 
     public static void write(OsirisMapsPlugin plugin, Snapshot snapshot) {
         Path file = file(plugin);
         StringBuilder text = new StringBuilder();
-        text.append("# OsirisMaps 1.0.0\n");
+        text.append("# OsirisMaps 2.0.0\n");
+        text.append('V').append('\t').append(snapshot.revision()).append('\n');
         writeFlags(text, 'D', snapshot.display());
         writeFlags(text, 'B', snapshot.bypass());
         for (Map.Entry<MapState.Kind, Boolean> entry : snapshot.globalDisplay().entrySet()) {

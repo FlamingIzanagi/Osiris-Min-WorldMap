@@ -9,6 +9,12 @@ public final class Channels {
     public static final String UPDATE_TRACKING = "osirismaps:update_tracking";
     public static final String MAP_RULES = "osirismaps:map_rules";
     public static final String PLAYERS = "osirismaps:players";
+    /** Cliente -> servidor: la revisión que ya tiene guardada. */
+    public static final String HELLO = "osirismaps:hello";
+    /** Servidor -> cliente: vacía los waypoints estáticos antes de una copia completa. */
+    public static final String SNAPSHOT = "osirismaps:snapshot";
+    /** Servidor -> cliente: número de revisión, después de aplicar los cambios. */
+    public static final String REVISION = "osirismaps:revision";
 
     public static final String[] ALL = {
             DISPLAY_MINIMAP,
@@ -17,7 +23,10 @@ public final class Channels {
             REMOVE_WAYPOINT,
             UPDATE_TRACKING,
             MAP_RULES,
-            PLAYERS
+            PLAYERS,
+            HELLO,
+            SNAPSHOT,
+            REVISION
     };
 
     private Channels() {

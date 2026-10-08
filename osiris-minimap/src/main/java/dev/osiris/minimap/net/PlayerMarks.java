@@ -41,6 +41,10 @@ public final class PlayerMarks {
         return heads;
     }
 
+    public static void restore(boolean value) {
+        heads = value;
+    }
+
     /** Cabeza fija por comando, o la cabeza temporal mientras Tab (lista de jugadores) está pulsado. */
     public static boolean showHeads() {
         return heads || tabDown();

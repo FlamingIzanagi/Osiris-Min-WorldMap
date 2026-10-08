@@ -1,5 +1,11 @@
 # OsirisMaps
 # /omap reload vuelve a leer este archivo.
+# logs: true anota cuando un jugador con el addon recibe las reglas, o cuando ya las tenia.
+# El aviso de encendido y el autor se muestran siempre, aunque logs este en false.
+logs: true
+# true: al encender o apagar una opcion global o de un mundo, se avisa a todo el servidor.
+# El admin sigue viendo su mensaje. El texto del aviso esta en messages.yml.
+announce-global: false
 # Lo que un admin cambia con /omap se guarda en plugins/OsirisMaps/state.txt
 # y no se borra al recargar. Estos valores solo aplican cuando ese ajuste nunca se ha puesto por comando.
 

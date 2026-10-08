@@ -82,6 +82,33 @@ public final class RemoteWaypoints {
     public record RadarDot(String id, double x, double y, double z, float yaw, String name) {
     }
 
+    public record StaticPoint(String id, String world, double x, double y, double z, int color, String name) {
+    }
+
+    public static List<StaticPoint> staticPoints() {
+        List<StaticPoint> points = new ArrayList<>();
+        for (Entry entry : ENTRIES.values()) {
+            if (entry.tracking || entry.id.startsWith("radar:") || entry.id.startsWith("track:")) {
+                continue;
+            }
+            points.add(new StaticPoint(entry.id, entry.world, entry.toX, entry.toY, entry.toZ, entry.color, entry.name));
+        }
+        return points;
+    }
+
+    /** Quita los waypoints de servidor y deja el rastreo y los iconos de jugadores. */
+    public static void dropStatic() {
+        List<String> drop = new ArrayList<>();
+        for (Entry entry : ENTRIES.values()) {
+            if (!entry.tracking && !entry.id.startsWith("radar:") && !entry.id.startsWith("track:")) {
+                drop.add(entry.id);
+            }
+        }
+        for (String id : drop) {
+            remove(id);
+        }
+    }
+
     public static void remove(String id) {
         Entry entry = ENTRIES.remove(id);
         if (entry != null) {
