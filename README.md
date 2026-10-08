@@ -1,52 +1,52 @@
 # OsirisMaps
 
-Addon de cliente y plugin de servidor para que el minimapa y el mapa del mundo funcionen como en OsirisMC: interfaz propia, reglas desde el servidor y un mapa por backend de la network.
+Client addon and server plugin so the minimap and world map behave like they do on OsirisMC: branded UI, server-side rules, and one map per network backend.
 
-El cliente no sustituye a Xaero. Se apoya en **Xaero's Minimap** y **Xaero's World Map**.
+This client does not replace Xaero. It runs on top of **Xaero's Minimap** and **Xaero's World Map**.
 
-## Qué incluye
+## What's included
 
-| Pieza | Archivo | Dónde va |
+| Piece | File | Installs in |
 | --- | --- | --- |
-| Mod Fabric (cliente) | `osiris-maps-2.0.0.jar` | carpeta `mods` del cliente |
-| Plugin Paper | `osiris-maps-plugin-1.0.0.jar` | carpeta `plugins` del servidor |
+| Fabric client mod | `osiris-maps-2.0.0.jar` | client `mods` folder |
+| Paper plugin | `osiris-maps-plugin-1.0.0.jar` | server `plugins` folder |
 
-Los jars de cada versión están en [Releases](https://github.com/FlamingIzanagi/Osiris-Min-WorldMap/releases).
+Jars for each version are in [Releases](https://github.com/FlamingIzanagi/Osiris-Min-WorldMap/releases).
 
-## Cliente (`osiris-maps`)
+## Client (`osiris-maps`)
 
 Minecraft **1.21.11**, Fabric, Java 21.
 
-- Marca OsirisMinimap / OsirisWorldMap y textos de la UI en español.
-- Superficie forzada excepto en el Nether, donde el mapa sigue el techo de cueva de forma automática.
-- Radar de entidades (mobs) desactivado. La flecha del jugador local se mantiene.
-- Los demás jugadores solo se ven si el servidor lo permite (`/omap players`).
-- Waypoints y puntos de muerte se pueden bloquear desde el servidor.
-- Teclas de Xaero ocultas en Controles; la config sigue en el menú del mod.
-- Compatible con FancyMenu.
+- OsirisMinimap / OsirisWorldMap branding and Spanish UI copy.
+- Forced surface everywhere except the Nether, where cave mode follows the ceiling automatically.
+- Entity radar (mobs) is off. The local player's arrow stays.
+- Other players only show if the server allows it (`/omap players`).
+- Waypoints and deathpoints can be locked by the server.
+- Xaero keybinds are hidden in Controls; settings stay in the mod menu.
+- Compatible with FancyMenu.
 
-Dependencias en el cliente: Fabric API, Xaero's Minimap 26.6.0 o superior, Xaero's World Map 1.47.0 o superior.
+Client dependencies: Fabric API, Xaero's Minimap 26.6.0 or newer, Xaero's World Map 1.47.0 or newer.
 
-## Servidor (`osiris-maps-plugin`)
+## Server (`osiris-maps-plugin`)
 
-Paper **1.21.8**. Permiso `osirismaps.admin` (OP). El estado de los comandos se guarda en `plugins/OsirisMaps/state.txt` y no se borra con `/omap reload`.
+Paper **1.21.8**. Permission `osirismaps.admin` (OP). Command state is stored in `plugins/OsirisMaps/state.txt` and is not wiped by `/omap reload`.
 
 ```
-/omap display <minimap|worldmap> [jugador] <on|off>
+/omap display <minimap|worldmap> [player] <on|off>
 /omap bypass <minimap|worldmap> <on|off>
-/omap waypoints <on|off> [mundo]
-/omap deathpoints <on|off> [mundo]
-/omap players <on|off> [mundo]
+/omap waypoints <on|off> [world]
+/omap deathpoints <on|off> [world]
+/omap players <on|off> [world]
 /omap playershead <on|off>
-/omap playersrange <default|full> [mundo]
+/omap playersrange <default|full> [world]
 /omap waypoint set|remove|list
 /omap track start|stop
 /omap reload
 ```
 
-Por defecto: minimapa, world map, waypoints y deathpoints en on; otros jugadores ocultos; iconos en punto (no cabeza); alcance `default` (solo jugadores ya cargados por Minecraft).
+Defaults: minimap, world map, waypoints, and deathpoints on; other players hidden; dots instead of heads; `default` range (only players Minecraft has already loaded).
 
-## Compilar
+## Build
 
 ```bat
 gradlew.bat :osiris-minimap:remapJar
